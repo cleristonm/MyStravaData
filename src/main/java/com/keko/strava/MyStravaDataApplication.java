@@ -21,6 +21,7 @@ public class MyStravaDataApplication  extends WebSecurityConfigurerAdapter {
 
 	@RequestMapping("/user")
 	public Principal user(Principal principal) {
+		System.out.println("Test");
 		return principal;
 	}
 
