@@ -17,4 +17,6 @@ public class Activity {
 	@JsonFormat(pattern="yyyy-MM-dd@HH:mm:ss.SSSZ")
     private Timestamp startDateLocal;
 	
+	private String tese;
+	
 }
