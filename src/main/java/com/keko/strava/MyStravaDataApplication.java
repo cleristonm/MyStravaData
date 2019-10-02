@@ -14,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -53,7 +54,9 @@ public class MyStravaDataApplication  extends WebSecurityConfigurerAdapter {
 	        .antMatchers("/", "/login**", "/webjars/**", "/error**", "/activities**")
 	        .permitAll()
 	      .anyRequest()
-	        .authenticated();
+	        .authenticated()
+	        .and().logout().logoutSuccessUrl("/").permitAll()
+	        .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 	  }
 	
 	@Bean
