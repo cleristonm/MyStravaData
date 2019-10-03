@@ -16,7 +16,25 @@ public class Activity {
 	@JsonProperty("start_date_local")
 	@JsonFormat(pattern="yyyy-MM-dd@HH:mm:ss.SSSZ")
     private Timestamp startDateLocal;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public Timestamp getStartDateLocal() {
+		return startDateLocal;
+	}
+	public void setStartDateLocal(Timestamp startDateLocal) {
+		this.startDateLocal = startDateLocal;
+	}
 	
-	private String tese;
+	
 	
 }
