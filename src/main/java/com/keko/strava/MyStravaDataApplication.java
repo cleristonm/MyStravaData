@@ -14,9 +14,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -45,8 +49,14 @@ public class MyStravaDataApplication  extends WebSecurityConfigurerAdapter {
 	
 	@RequestMapping("/activities")
 	public ResponseEntity<List<Activity>> activities(final @AuthenticationPrincipal Principal principal) {
-			
 		
+		List<Activity> lastActivity = activityRepository.findFirstByOrderByStartDateDesc();
+		
+		int lastEpoch = 0;
+		if (lastActivity.isEmpty()==false) {
+			lastEpoch = (int) (lastActivity.get(0).getStartDate().getTime()/1000);
+		}
+		System.out.println(lastEpoch);
 		final RestTemplate restTemplate = new RestTemplate();
 
 	    final HttpHeaders headers = new HttpHeaders();
@@ -54,7 +64,7 @@ public class MyStravaDataApplication  extends WebSecurityConfigurerAdapter {
 	    final HttpEntity<String> entity =
 	        new HttpEntity<String>("parameters", headers);
 	    ResponseEntity<List<Activity>> rateResponse =
-	            restTemplate.exchange("https://www.strava.com/api/v3/athlete/activities?after=0",
+	            restTemplate.exchange("https://www.strava.com/api/v3/athlete/activities?after="+lastEpoch,
 	                        HttpMethod.GET, entity, new ParameterizedTypeReference<List<Activity>>() {
 	                });
 	    List<Activity> activities = rateResponse.getBody();
@@ -105,6 +115,15 @@ public class MyStravaDataApplication  extends WebSecurityConfigurerAdapter {
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
 		return builder.build();
+	}
+	
+	@Scheduled(fixedRate = 60000)
+	public void importActivities() {
+		System.out.println("Entrou");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		Principal principal = (Principal) authentication.getPrincipal();
+		System.out.println(principal.getName());
 	}
 	
 	
