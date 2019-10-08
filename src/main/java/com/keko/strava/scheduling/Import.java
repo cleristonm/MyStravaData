@@ -41,7 +41,7 @@ public class Import {
 			final RestTemplate restTemplate = new RestTemplate();
 	
 			final HttpHeaders headers = new HttpHeaders();
-			headers.setBearerAuth("ce80698258c77df2e06d6599d953f6c7311f6a7a");
+			headers.setBearerAuth("");
 			final HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 			ResponseEntity<List<Activity>> rateResponse = restTemplate.exchange(
 					"https://www.strava.com/api/v3/athlete/activities?after=" + lastEpoch, HttpMethod.GET, entity,
