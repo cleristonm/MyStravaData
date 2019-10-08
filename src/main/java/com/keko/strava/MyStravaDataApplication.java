@@ -34,6 +34,7 @@ import com.keko.strava.repository.ActivityRepository;
 @SpringBootApplication
 @EnableOAuth2Sso
 @RestController
+@EnableScheduling
 public class MyStravaDataApplication  extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private ActivityRepository activityRepository;
@@ -117,14 +118,7 @@ public class MyStravaDataApplication  extends WebSecurityConfigurerAdapter {
 		return builder.build();
 	}
 	
-	@Scheduled(fixedRate = 60000)
-	public void importActivities() {
-		System.out.println("Entrou");
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		Principal principal = (Principal) authentication.getPrincipal();
-		System.out.println(principal.getName());
-	}
+	
 	
 	
 }
